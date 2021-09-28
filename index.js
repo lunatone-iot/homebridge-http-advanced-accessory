@@ -128,9 +128,22 @@ HttpAdvancedAccessory.prototype = {
  */
 	httpRequest : function(url, body, httpMethod, callback) {
 		setTimeout(
-			function(){request({
+			function(){
+				let jsonBody = false;
+				if (body) {
+					this.debugLog("httpRequest body " + body);
+					try {
+						jsonBody = JSON.parse(body);
+						this.debugLog("httpRequest jsonBody:");
+						this.debugLog(jsonBody);
+					} catch (err) {
+						this.debugLog("httpRequest jsonBody parse failed:" + err.toString());
+					}
+				}
+				request({
 				url: url,
-				body: body,
+				body: jsonBody || body,
+				json: !!jsonBody,
 				method: httpMethod,
 				auth: {
 					user: this.auth.username,
